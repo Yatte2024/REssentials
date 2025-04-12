@@ -124,7 +124,7 @@ shinyApp(ui, server)
 - For use cases like a shopping cart, counter, or workflow stepper.
 - When you need shared state that persists across reactive blocks.
 
-### Full Example
+### Example
 
 ```r
 library(shiny)
@@ -171,7 +171,7 @@ shinyApp(ui, server)
 - When you need full control over when reactivity is triggered.
 - For user-triggered computations or updates.
 
-### Full Example
+### Example
 
 ```r
 library(shiny)
@@ -196,7 +196,7 @@ shinyApp(ui, server)
 
 ---
 
-## Summary Table: Comparing Core Reactive Tools
+## Summary: Comparing Core Reactive Tools
 
 | Function           | Returns Value | Lazy? | When It Runs                      | Primary Use                             |
 |--------------------|---------------|--------|------------------------------------|------------------------------------------|
