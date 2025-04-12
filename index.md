@@ -1,5 +1,7 @@
-
-# Deep Dive: `reactive()`, `observe()`, `reactiveValues()`, and `observeEvent()` in R Shiny
+---
+title: "Deep Dive: Reactive vs Observe vs ReactiveValues vs observeEvent"
+layout: default
+---
 
 Shiny’s reactive programming model is built on four key tools: `reactive()`, `observe()`, `reactiveValues()`, and `observeEvent()`. Each has a distinct role in making your app interactive, efficient, and responsive.
 
