@@ -30,12 +30,13 @@ Let’s look at their **functional differences**, **common use cases**, and **co
 - When the same logic is needed in multiple places.
 - When you want to avoid unnecessary recalculations.
 
-### Full Example
+### Example
 
 ```r
 library(shiny)
 
 ui <- fluidPage(
+  titlePanel("Calculate Square Value:"),
   numericInput("num", "Enter a number:", 1),
   verbatimTextOutput("square")
 )
@@ -75,43 +76,26 @@ shinyApp(ui, server)
 - To log information or debug.
 - When you need something to happen automatically when inputs change.
 
-### Full Example 1: Log input
+### Example: Dynamically update a dropdown
 
 ```r
 library(shiny)
 
 ui <- fluidPage(
-  numericInput("x", "Enter a number:", 1)
-)
-
-server <- function(input, output) {
-  observe({
-    print(paste("User entered:", input$x))
-  })
-}
-
-shinyApp(ui, server)
-```
-
-### Full Example 2: Dynamically update a dropdown
-
-```r
-library(shiny)
-
-ui <- fluidPage(
-  selectInput("brand", "Select brand", choices = c("Toyota", "Honda")),
-  selectInput("model", "Select model", choices = NULL)
+  titlePanel("When the pets is changed, the breed updates automatically."),
+  selectInput("Pets", "Select pets", choices = c("Dogs", "Cats")),
+  selectInput("Breed", "Select model", choices = NULL)
 )
 
 server <- function(input, output, session) {
   observe({
-    models <- if (input$brand == "Toyota") {
-      c("Corolla", "Camry")
+    models <- if (input$Pets == "Dogs") {
+      c("Maltese", "Maltipoo", "Cavapoo")
     } else {
-      c("Civic", "Accord")
+      c("Ragdoll", "Siberian")
     }
-
-    updateSelectInput(session, "model", choices = models)
+    
+    updateSelectInput(session, "Breed", choices = models)
   })
 }
 
