@@ -10,7 +10,7 @@ Here you'll find concise and practical explanations of the most important reacti
 
 ## 📚 Topics
 
-- [📂 Reactive vs Observe vs ReactiveValue vs ObserveEvent](./Reactive-vs-Observe-vs-ReactiveValue-vs-ObserveEvent/)
+- [📂 Reactive vs Observe vs ReactiveValue vs ObserveEvent](./Reactive-vs-Observe-vs-ReactiveValues-vs-ObserveEvent/)
 - *(coming soon)*
 
 ---
