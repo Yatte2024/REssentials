@@ -25,11 +25,13 @@ This guide explains how to create, document, test, and finalize an R package, us
 ## 2. Setting Up the Package
 
 ```r
+# Create base structure for `easyToolkit` package
 usethis::create_package("easyToolkit")
+# list directory sturcture
 dir(".")
 ```
 
-Essential structure created: `DESCRIPTION`, `NAMESPACE`, `R/`.
+Essential structure created: `DESCRIPTION`, `NAMESPACE`, `R/`, `man/`.
 
 Optionally, you can initialize Git (`usethis::use_git()`) and publish to GitHub (`usethis::use_github()`).
 
@@ -43,22 +45,22 @@ Optionally, you can initialize Git (`usethis::use_git()`) and publish to GitHub 
 | `usethis::use_r("file_name")` | Creates a new, empty `.R` file in the `R/` folder for writing new functions. | Planned development, clean organization. |
 | `dump("function_name", "R/file_name.R")` | Saves an existing function from the environment into an `.R` file. | Quick saving of interactively written code. |
 
-✅ Prefer `use_r()` for structured development; use `dump()` for quick saving from console.
+✅ `use_r()` for structured development; 
+✅ use `dump()` for quick saving from console.
 
-**Example Function**:
+**Example**:
 
 ```r
 fahrenheit_to_celsius <- function(temp_f) {
   (temp_f - 32) * 5/9
 }
 
-usethis::use_r("temperature_utils") # Create
+usethis::use_r("temperature_utils") # Create empty .R file under R/
 # OR
-dump("fahrenheit_to_celsius", "R/temperature_utils.R") # Save
+dump("fahrenheit_to_celsius", "R/temperature_utils.R") # Save existing function with comments into .R file
 ```
 
 ---
-
 
 ## 4. Installing vs Loading the Package
 
@@ -67,7 +69,8 @@ dump("fahrenheit_to_celsius", "R/temperature_utils.R") # Save
 | `devtools::install()` | Installs the package | After major changes |
 | `devtools::load_all()` | Loads package without installing | During active development |
 
-(devtools::install() compiles the package formally, devtools::load_all() only loads code for development without installation.)
+✅ devtools::install() compiles the package formally;
+✅ devtools::load_all() only loads code for development without installation.
 
 ---
 
@@ -110,7 +113,7 @@ usethis::use_mit_license(name = "Your Name")
 | GPL-3 License | Requires derivative works to also be open source under GPL. | Good if you want to enforce open-source compliance. | `use_gpl3_license()` |
 | CC0 License | Public domain dedication; no rights reserved. | Good if you want to give up all rights and encourage maximum reuse. | `use_cc0_license()` |
 
-✅ Best Practice: Use MIT for maximum flexibility, GPL-3 if you want stricter sharing rules.
+✅ Use MIT for maximum flexibility, GPL-3 if you want stricter sharing rules.
 
 
 
@@ -118,12 +121,13 @@ usethis::use_mit_license(name = "Your Name")
 
 ## 6. Managing Dependencies (Including Minimum Version)
 
-Add packages:
+Add packages using `use_package`
+
 | Type | Loaded automatically? | Notes |
 |:------|:------|:------|
-|Imports |    ✅ | Functions always available|
-|Suggests |    ❌ | Optional, examples or vignettes only|
-|Depends |    ⚠️ | Full attachment, best avoided|
+|Imports | ✅ | Functions always available|
+|Suggests | ❌ | Optional, examples or vignettes only|
+|Depends | ⚠️ | Full attachment, best avoided|
 
 
 ```r
@@ -136,20 +140,6 @@ usethis::use_package("stringr", type = "Import", min_version = "1.5.0") #Set min
 
 ## 7. Writing Documentation
 
-Roxygen2 header:
-
-```r
-#' Convert Fahrenheit to Celsius
-#'
-#' @param temp_f Numeric temperature in Fahrenheit
-#' @return Numeric temperature in Celsius
-#' @export
-#'
-#' @examples
-#' fahrenheit_to_celsius(32)
-fahrenheit_to_celsius <- function(...) { ... }
-```
-
 Generate documentation:
 
 ```r
@@ -158,7 +148,8 @@ devtools::document()
 roxygen2::roxygenize()
 ```
 
-(devtools::document() also updates DESCRIPTION and NAMESPACE, while roxygen2::roxygenize() only updates documentation.)
+✅ `devtools::document()` also updates DESCRIPTION and NAMESPACE
+✅ `roxygen2::roxygenize()` only updates documentation.)
 
 ---
 
@@ -167,7 +158,7 @@ roxygen2::roxygenize()
 Create vignette:
 
 ```r
-usethis::use_vignette("intro_to_easyToolkit", title = "Getting Started with easyToolkit")
+usethis::use_vignette("intro_to_easyToolkit", title = "Getting Started with easyToolkit"
 ```
 
 Build vignettes:
@@ -177,7 +168,8 @@ devtools::build_vignettes()
 rmarkdown::render("vignettes/intro_to_easyToolkit.Rmd")
 ```
 
-(devtools::build_vignettes() builds for package use, rmarkdown::render() is for quick checking during writing.)
+✅ `devtools::build_vignettes()` builds for package use;
+✅ `rmarkdown::render()` is for quick checking during writing.
 
 ---
 
@@ -224,28 +216,20 @@ Common test functions:
 | `testthat::expect_length()` | Check object length |
 | `testthat::expect_named()` | Check if object is named |
 
-Best practices for writing tests:
-
-- Use small, focused `test_that()` blocks.
-- Always test normal cases, edge cases, and invalid inputs.
-- Cover both success and expected failure scenarios.
-- Use `tolerance` argument when comparing floating-point numbers.
-- Rerun tests after every meaningful code change.
-- Keep tests independent from each other.
 
 Example of advanced testing:
 
 ```r
-testthat::test_that("fahrenheit_to_celsius handles numeric input correctly", {
-  testthat::expect_equal(fahrenheit_to_celsius(98.6), 37, tolerance = 1e-1)
+testthat::test_that(" handles numeric input correctly", {
+  testthat::expect_equal(a_to_b(98.6), 37, tolerance = 1e-1)
 })
 
-testthat::test_that("fahrenheit_to_celsius throws error on non-numeric input", {
-  testthat::expect_error(fahrenheit_to_celsius("not_a_number"))
+testthat::test_that("throws error on non-numeric input", {
+  testthat::expect_error(a_to_b("not_a_number"))
 })
 
-testthat::test_that("fahrenheit_to_celsius special cases", {
-  testthat::expect_equal(fahrenheit_to_celsius(-40), -40) # Celsius and Fahrenheit meet at -40
+testthat::test_that("special cases", {
+  testthat::expect_equal(a_to_b(-40), -40)
 })
 ```
 
