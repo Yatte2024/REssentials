@@ -1,4 +1,7 @@
-# R Package Development Summary (Final Upgraded Version)
+---
+title: "R Package Development Workflow Summary"
+layout: default
+---
 
 This guide explains how to create, document, test, and finalize an R package, using professional best practices.
 
