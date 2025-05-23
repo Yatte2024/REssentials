@@ -247,11 +247,11 @@ eval_tidy(expr, data = mtcars)  # → mpg column + 1
                       Single insert           Multiple insert
                            |                       |
                        dplyr verbs             !!! + syms()
-                                         |
-                                     Evaluation
-                                ---------------------
-                                |                   |
-                            base::eval()     rlang::eval_tidy()
-                        (manual context)     (data-aware context)
+                                     |
+                                 Evaluation
+                            ---------------------
+                            |                   |
+                        base::eval()     rlang::eval_tidy()
+                    (manual context)     (data-aware context)
 ```
 
