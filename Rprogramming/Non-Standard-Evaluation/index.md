@@ -11,13 +11,13 @@ In base R, **expressions like `filter(df, mpg > 20)` seem to "know" what `mpg` i
 #### ✅ Standard evaluation (SE)
 
 ```r
-filter(df, "mpg > 20")  # Need to quote, evaluate explicitly
+filter(mtcars, "mpg > 20")  # Need to quote, evaluate explicitly
 ```
 
 #### ✅ Non-standard evaluation (NSE)
 
 ```r
-filter(df, mpg > 20)    # `mpg > 20` is captured as an unevaluated expression
+filter(mtcars, mpg > 20)    # `mpg > 20` is captured as an unevaluated expression
 ```
 
 In NSE:
@@ -35,9 +35,7 @@ This gives great flexibility, but can be **confusing to program with**. That's w
 |---------------|----------------------------|----------------------------------|
 | Input         | Actual values              | Code expressions                |
 | Timing        | Immediate                  | Deferred                        |
-| Usage         | `filter(df, "mpg > 20")`   | `filter(df, mpg > 20)`          |
-| Programming   | Easy                       | Complex unless using rlang      |
-
+| Usage         | `filter(mtcars, "mpg > 20")`   | `filter(mtcars, mpg > 20)`          |
 
 
 ### 1.2 What is Tidy Evaluation?
@@ -62,15 +60,15 @@ filter(mtcars, mpg > 20)  # cleaner!
 
 | Function       | Description                                |
 |----------------|--------------------------------------------|
-| `ensym()`      | Capture a single symbol (e.g., column name) |
-| `enquo()`      | Capture an expression with its environment |
-| `quo()`        | Manually create a quosure                  |
-| `expr()`       | Create a pure expression (no environment)  |
+| `rlang::ensym()`      | Capture a single symbol (e.g., column name) |
+| `rlang::enquo()`      | Capture an expression with its environment |
+| `rlang::quo()`        | Manually create a quosure                  |
+| `rlang::expr()`       | Create a pure expression (no environment)  |
 | `!!`           | Unquote a quosure/symbol to insert into expression |
 | `!!!`          | Unquote-splice multiple expressions        |
-| `syms()`       | Turn string vector into symbols list       |
-| `as_name()`    | Turn symbol into string                    |
-| `eval_tidy()`  | Evaluate in a tidy (data-aware) context    |
+| `rlang::syms()`       | Turn string vector into symbols list       |
+| `rlang::as_name()`    | Turn symbol into string                    |
+| `rlang::eval_tidy()`  | Evaluate in a tidy (data-aware) context    |
 
 ---
 
@@ -104,27 +102,66 @@ filter_by_condition(mtcars, mpg > 20)
 
 ---
 
-## 4. Injecting Expressions with `!!` and `!!!`
+## 4. `ensym()` vs `sym()`
+
+Both `rlang::ensym()` and `rlang::sym()` deal with symbols in R, but they are used in different contexts.
+
+| Feature        | `rlang::sym()`                             | `rlang::ensym()`                                  |
+|----------------|--------------------------------------------|---------------------------------------------------|
+| Package        | rlang                                       | rlang                                            |
+| Purpose        | Convert a string to a symbol               | Capture a symbol passed as a function argument   |
+| Input type     | String                                      | Bare symbol (from user input)                   |
+| Usage context  | Programming context                         | User-facing function interface                   |
+| Environment    | None (you provide symbol)                  | Captures from caller's environment               |
+
+### 🔹 Example: `rlang::sym()`
+
+#### `rlang::sym()`
+
+```r
+var <- "age"
+df %>% dplyr::select(!!rlang::sym(var))  # programming with strings
+```
+
+#### `rlang::ensym()`
+
+```r
+my_select <- function(df, var) {
+  var_sym <- rlang::ensym(var)
+  df %>% dplyr::select(!!var_sym)
+}
+
+my_select(df, age)  # user-friendly interface
+```
+
+- `rlang::sym("age")` converts `"age"` (a string) into a symbol.
+- `rlang::ensym(age)` captures the unquoted user input `age` as a symbol.
+
+
+## 5. Injecting Expressions with `!!` and `!!!`
 
 ### `!!` – Unquote a single symbol/quosure
 
 ```r
 col <- ensym(mpg)
-filter(mtcars, !!col > 20)
+filter(data, !!col > 20)
 ```
 
 ### `!!!` – Unquote-splice a list (useful for multiple columns)
 
 ```r
-cols <- syms(c("mpg", "hp"))
-select(mtcars, !!!cols)
+cols <- c("mpg", "hp")
+select(mtcars, !!!syms(cols))
+```
+or using **all_of()**
+
+```r
+select(mtcars, all_of(cols))
 ```
 
 ---
 
-## 5. Building Expressions: `quo()` vs `expr()`
-
-### What's the difference?
+## 6. Building Expressions: `quo()` vs `expr()`
 
 | Function   | Captures environment? | Used for…                            | Returns     |
 |------------|------------------------|--------------------------------------|-------------|
@@ -149,13 +186,12 @@ get_env(q)  # environment where `x` is defined
 get_env(e)  # empty_env()
 ```
 
-Summary:
 - `quo()` = expression + environment
 - `expr()` = just syntax (no context)
 
 ---
 
-## 6. `eval()` vs `eval_tidy()`: Choosing the Right Tool
+## 7. `eval()` vs `eval_tidy()`: Choosing the Right Tool
 
 | Feature               | `eval()` (base R)             | `eval_tidy()` (rlang)            |
 |-----------------------|-------------------------------|----------------------------------|
@@ -165,14 +201,12 @@ Summary:
 | Typical use case      | Programmatic R expressions    | Tidyverse functions (`filter()`, `mutate()`, etc.) |
 
 ### Example:
-
 ```r
 expr <- expr(mpg + 1)
 
 eval(expr)                   # Error: object 'mpg' not found
 eval_tidy(expr, data = mtcars)  # → mpg column + 1
 ```
-
 **Use `eval()` when**:
 - Writing low-level or base R tools
 - Managing environments manually
@@ -180,21 +214,6 @@ eval_tidy(expr, data = mtcars)  # → mpg column + 1
 **Use `eval_tidy()` when**:
 - Evaluating expressions in data context
 - Working with quosures / tidyverse
-
----
-
-## 7. Dynamic Column Names from Strings
-
-```r
-cols <- c("mpg", "hp")
-
-# Method 1: syms + !!!
-select(mtcars, !!!syms(cols))
-
-# Method 2: dplyr's all_of()
-select(mtcars, all_of(cols))
-```
-
 ---
 
 ## 8. Common Issues
@@ -228,11 +247,11 @@ select(mtcars, all_of(cols))
                       Single insert           Multiple insert
                            |                       |
                        dplyr verbs             !!! + syms()
-                                   |
-                               Evaluation
-                          ---------------------
-                          |                   |
-                      base::eval()     rlang::eval_tidy()
-                  (manual context)     (data-aware context)
-```
+                                         |
+                                     Evaluation
+                                ---------------------
+                                |                   |
+                            base::eval()     rlang::eval_tidy()
+                        (manual context)     (data-aware context)
+      ```
 
