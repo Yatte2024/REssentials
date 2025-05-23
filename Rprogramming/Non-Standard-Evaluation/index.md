@@ -253,5 +253,5 @@ eval_tidy(expr, data = mtcars)  # → mpg column + 1
                                 |                   |
                             base::eval()     rlang::eval_tidy()
                         (manual context)     (data-aware context)
-      ```
+```
 
