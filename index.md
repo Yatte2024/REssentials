@@ -30,4 +30,5 @@ Here you'll find practical, concise explanations of key concepts, focusing on R 
 
 ---
 
-Built with 💻 and powered by reactivity ⚡
+# R Prgramming: Key Concepts & Examples
+- [Non-Standard Evaluation](./REssentials/Rprogramming/Non-Standard-Evaluation/) 
