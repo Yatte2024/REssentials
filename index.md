@@ -31,4 +31,4 @@ Here you'll find practical, concise explanations of key concepts, focusing on R 
 ---
 
 # R Prgramming: Key Concepts & Examples
-- [Non-Standard Evaluation](./REssentials/Rprogramming/Non-Standard-Evaluation/) 
+- [Non-Standard Evaluation](./Rprogramming/Non-Standard-Evaluation/) 
