@@ -1,7 +1,7 @@
 # R Package Validation
 
 ## 1. Materials for R Package Validation
-* [R package validation white page](https://pharmar.org/white-paper/)
+* [R package validation white paper](https://pharmar.org/white-paper/)
   - [SOP in Roche, Novartis, Merck and GSK](https://www.youtube.com/watch?v=P2m6RmVViu0)
  
       - Roche
