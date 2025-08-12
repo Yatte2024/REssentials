@@ -20,5 +20,4 @@
   - [{RISKMETRIC} package](https://pharmar.org/riskmetric/)
   - [{Covr} Covr::coverage](https://covr.r-lib.org/)
 
-## 2. What's on in BMS
-* Kimberly is leading the R package specific guidance, confirmed from Margaret that **we are also following white paper**,  and Kimberly has it all drafted out and just wanted to put it through review
+
