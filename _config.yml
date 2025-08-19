@@ -1,6 +1,5 @@
 theme: jekyll-theme-cayman
 title: "R Essentials: My Learning Journey"
-
 header_pages:
   - index.md
   - Rshiny/Reactive-vs-Observe-vs-ReactiveValues-vs-ObserveEvent.md
