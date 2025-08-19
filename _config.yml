@@ -1,3 +1,9 @@
 theme: jekyll-theme-cayman
 title: "R Essentials: My Learning Journey"
 
+header_pages:
+  - index.md
+  - Rshiny/Reactive-vs-Observe-vs-ReactiveValues-vs-ObserveEvent.md
+  - Rpackage/Development_Workflow_Rpackage.md
+  - Rprogramming/Non-Standard-Evaluation.md
+  - Rprogramming/purrr-Usage-Summary/index.md
